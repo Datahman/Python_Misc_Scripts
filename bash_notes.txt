@@ -1,0 +1,3 @@
+To restart bash use "source".
+
+* Path directories are enlisted in etc/environment! 

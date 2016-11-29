@@ -1,0 +1,79 @@
+# Bi-modal distribution/Two cluster problem: Use inference, i.e find parameters p0, and p1 for the model using binomial distributions, say N_0,N_1 with corresponding sigma, and mean (both unknowns). Self-note: By not knowing mean or the s.deviation we assume the data points to be either belonging to N_0 or N_1, with assigned probabilities. 
+
+~~ Assignment of random variables to cluster data-points~~ A stochastic variable with parameter, call k, in value range k: [0,k-1]. In the case of two clusters, k = 0 and k = 1. 
+
+Assume now a datapoint is assigned to N_0 with probability,p_0 (It will be clear further down).
+
+Next, let the priori of assigning k to cluster 1, x_, be of uniform nature over [x_,1-x_] => [0,1].  
+
+This stochastic variable is known as a Categorical variable in PyMC library, with probability in the given range.  
+
+Next step is to set up a precision variable in uniform probability range [0,1], hence an unknown parameter to us. It is related to the standard deviation as follows: tau = 1/sdev**2.
+
+We then set-up read the bi-modal histogram to observe and infer the centers (mean), and set-up two normal distributions with the inferred mean values, naming another variable as "centers", of size 2.
+
+Def functions to return centers_i, and assignment values for the two clusters. Self note: """This is the observation step. Why ?"""
+
+Finally, set up the Model using Pymc Model class consisting of paramters: {x_,assignment,observations,taus,centers}
+
+Get the traces using the trace method for all the unknown parametes, centers_i, taus_i and p(k_i).
+
+Trace notes: (a) Traces converge not to a single point, but a distribution (MCMC algorithm!). 
+(b) First few e^3 samples don't show the final convergence, so can be ignored. These are labelled as "burn-in" period.
+
+
+We notice for our pair of unknowns, neither best describes the whole data, so we use the mean of posteriors. We overlay the posterior mean parameters, on a normal distribution, using s_dev: sigma_i,mu_i: posterior mean.
+
+For any additional data points that have been observed, N_e, e -> [n+1, infy] where 'n' is the original data set no. of points.
+
+We can predict the probability of finding the particular data point, in either of the clusters, using Bayesian formula.
+
+### MAP ###
+In PyMC MAP : Maximum a posterior can be identified to improve convergence speed, where MAP is the maximum posterior probabilty point on the distriution.
+
+### Convergence problem: Auto-correlation ###
+Say if we have two vectors, a_, b_ of same dimensions, then correlating the two is to find their convulution:
+ a_xb_ = \sum +infy^_-infy a_i . ^b_(i+t).
+
+In other words, convulution is the measure of overlapping of one function, over other (vector in this case).
+
+In case of conuluting the same vector with itself, it is called auto-correlation.
+C^auto(t) = \sum +infy^_-infy a_i . ^a_(i+t), where 't' is the time interval.
+
+###Finding auto-correlation in Python###
+
+Numpy library offers np.correlate.
+
+For our purposes we wish to find the auto-correlation.
+np.correlate(vec1,_vec2,mode).
+
+The mode arguement can be:
+
+* "Full": returns results for every t, where vec_1,vec_2 have some overlap.
+
+* "same": returns result with same length as the shortedt vector.
+
+* "valid": returns result when vec_1 and vec_2 completely overlap.
+
+### Note on auto-correlation###
+
+We must divide our results by length (2), since t lies -> [-infy,+infy], where as auto-correlation starts from t=0, not t<0!.
+
+
+Post processing requires samples to be not auto-correlated, so to avoid that thinning could be done . i.e selectring samples at set intervals, however, more MCMC sample iterations are required. 
+
+### Section on MMC (Mrkov chain monte carlo)###
+
+Problems: Convergence due to lack of choosing right priors could stop posterior convergence, to avoid this: * If the dstrubition is normal then infer using frequentist approach of guessing the mean, and apply thinning procedure.
+
+
+
+### Large number limit ###
+
+* For large data the law of large limit number applies, however, when sample occurence (or prob of given event): sample size ratio <<1, then it fails.
+
+
+
+
+
+
