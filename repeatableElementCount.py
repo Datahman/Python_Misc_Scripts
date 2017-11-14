@@ -31,6 +31,7 @@ t = [1,1,1,1,1,1,1,1,2,3]
 option=1
 a= repeatableElementCount(t, n=len(t)-1,option=2)
 print(a)
+#
 
 
 
