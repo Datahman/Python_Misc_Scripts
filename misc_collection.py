@@ -187,6 +187,7 @@ def func():
     return
 a = func()
 
+<<<<<<< HEAD
 # Another way of finding factorials
 def factor(n):
     res = n
@@ -212,3 +213,13 @@ for i in range(len(a)-1): # 0,1,2
 
 
 
+=======
+# Find smallest and largest array elements.
+
+def findLS(A):
+    i = len(A) + 1
+    while i:
+        if 
+            
+        
+>>>>>>> cff9c0401c3087c3346cc2e9f6b74a13d91c07fe
